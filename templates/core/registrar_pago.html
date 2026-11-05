@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load core_extras %}
+
+{% block title %}Registrar pago · FactuPerú{% endblock %}
+{% block page_title %}Registrar {{ tipo }}{% endblock %}
+
+{% block content %}
+<div class="card card-form">
+  {% if tipo == 'cobro' %}
+  <p>Comprobante: <strong>{{ comp.serie }}-{{ comp.numero }}</strong> — Cliente: <strong>{{ comp.cliente.nombre }}</strong></p>
+  {% else %}
+  <p>Comprobante: <strong>{{ comp.serie }}-{{ comp.numero }}</strong> — Proveedor: <strong>{{ comp.proveedor.nombre }}</strong></p>
+  {% endif %}
+  <p class="hint">Saldo pendiente: <strong class="text-danger">{{ saldo|soles }}</strong></p>
+
+  <form method="post">
+    {% csrf_token %}
+    <div class="form-grid">
+      <div class="field">
+        <span>Monto</span>
+        <input type="number" step="0.01" min="0.01" max="{{ saldo }}" name="monto" required autofocus>
+      </div>
+      <div class="field">
+        <span>Fecha</span>
+        <input type="date" name="fecha" value="{% now 'Y-m-d' %}" required>
+      </div>
+      <div class="field">
+        <span>Método</span>
+        <select name="metodo">
+          <option value="efectivo">Efectivo</option>
+          <option value="transferencia">Transferencia</option>
+          <option value="tarjeta">Tarjeta</option>
+          <option value="cheque">Cheque</option>
+          <option value="otro">Otro</option>
+        </select>
+      </div>
+      <div class="field">
+        <span>Referencia</span>
+        <input type="text" name="referencia" placeholder="N° operación, cheque, etc.">
+      </div>
+    </div>
+    <div class="form-actions">
+      <button type="submit" class="btn btn-primary">Guardar pago</button>
+      <a href="javascript:history.back()" class="btn btn-light">Cancelar</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

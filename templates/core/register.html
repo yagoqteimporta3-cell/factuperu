@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block title %}Registro · FactuPerú{% endblock %}
+
+{% block auth %}
+<div class="auth-wrap">
+    <div class="auth-card auth-card-wide">
+        <div class="brand auth-brand">
+            <span class="brand-mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="m9 15 2 2 4-4"/></svg></span>
+            <span class="brand-name">FactuPerú</span>
+        </div>
+        <p class="auth-sub">Crea tu cuenta y tu empresa para empezar a gestionar.</p>
+        {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-error">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-grid">
+                <label class="field">
+                    <span>Usuario</span>
+                    <input type="text" name="username" required autofocus>
+                </label>
+                <label class="field">
+                    <span>Contraseña</span>
+                    <input type="password" name="password" required>
+                </label>
+                <label class="field">
+                    <span>Tu nombre</span>
+                    <input type="text" name="nombre">
+                </label>
+                <label class="field">
+                    <span>Razón social de la empresa</span>
+                    <input type="text" name="razon_social" required>
+                </label>
+                <label class="field">
+                    <span>RUC (11 dígitos)</span>
+                    <input type="text" name="ruc" maxlength="11" required>
+                </label>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">Crear cuenta</button>
+        </form>
+        <p class="auth-alt">¿Ya tienes cuenta? <a href="{% url 'core:login' %}">Inicia sesión</a></p>
+    </div>
+</div>
+{% endblock %}

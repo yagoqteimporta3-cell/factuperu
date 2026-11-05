@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% load core_extras %}
+
+{% block title %}Reportes · FactuPerú{% endblock %}
+{% block page_title %}Reportes{% endblock %}
+
+{% block content %}
+<div class="kpi-grid">
+  <div class="card kpi"><div class="kpi-label">Ventas del mes</div><div class="kpi-value">{{ ventas_mes|soles }}</div></div>
+  <div class="card kpi"><div class="kpi-label">Compras del mes</div><div class="kpi-value">{{ compras_mes|soles }}</div></div>
+  <div class="card kpi"><div class="kpi-label">IGV ventas</div><div class="kpi-value">{{ igv_ventas_mes|soles }}</div></div>
+  <div class="card kpi"><div class="kpi-label">IGV compras</div><div class="kpi-value">{{ igv_compras_mes|soles }}</div></div>
+</div>
+
+<div class="card">
+  <h3 class="card-title">Exportar (libros / registros)</h3>
+  <p class="hint">Descarga tus registros de ventas y compras en CSV, listos para tu contador o para tus libros SUNAT.</p>
+  <div class="form-actions">
+    <a href="{% url 'core:exportar_ventas_csv' %}" class="btn btn-primary">⬇ Exportar ventas (CSV)</a>
+    <a href="{% url 'core:exportar_compras_csv' %}" class="btn btn-primary">⬇ Exportar compras (CSV)</a>
+  </div>
+</div>
+
+<div class="card">
+  <h3 class="card-title">Próximamente</h3>
+  <p class="hint">Planilla de trabajadores (PLAME), libros electrónicos PLE y facturación electrónica SUNAT vía OSE (Nubefact). Se activan en las siguientes fases.</p>
+</div>
+{% endblock %}

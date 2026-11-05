@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% load core_extras %}
+
+{% block title %}Dashboard · FactuPerú{% endblock %}
+
+{% block content %}
+<div class="quick-actions">
+  <a href="{% url 'core:venta_crear' %}" class="quick-btn"><span class="plus">+</span> Nueva venta</a>
+  <a href="{% url 'core:compra_crear' %}" class="quick-btn"><span class="plus">+</span> Nueva compra</a>
+  <a href="{% url 'core:cliente_crear' %}" class="quick-btn"><span class="plus">+</span> Cliente</a>
+  <a href="{% url 'core:producto_crear' %}" class="quick-btn"><span class="plus">+</span> Producto</a>
+</div>
+
+<div class="kpi-grid">
+    <div class="card kpi">
+        <div class="kpi-label">Ventas del mes</div>
+        <div class="kpi-value">{{ ventas_mes|soles }}</div>
+        <div class="kpi-hint">IGV incluido</div>
+    </div>
+    <div class="card kpi">
+        <div class="kpi-label">Compras del mes</div>
+        <div class="kpi-value">{{ compras_mes|soles }}</div>
+        <div class="kpi-hint">IGV incluido</div>
+    </div>
+    <div class="card kpi kpi-warn">
+        <div class="kpi-label">Por cobrar</div>
+        <div class="kpi-value">{{ por_cobrar|soles }}</div>
+        <div class="kpi-hint">saldos pendientes de clientes</div>
+    </div>
+    <div class="card kpi kpi-danger">
+        <div class="kpi-label">Por pagar</div>
+        <div class="kpi-value">{{ por_pagar|soles }}</div>
+        <div class="kpi-hint">saldos pendientes a proveedores</div>
+    </div>
+</div>
+
+<div class="card">
+    <h3 class="card-title">Resumen</h3>
+    <div class="mini-grid">
+        <div class="mini-stat"><span class="mini-num">{{ n_clientes }}</span><span class="mini-label">Clientes</span></div>
+        <div class="mini-stat"><span class="mini-num">{{ n_proveedores }}</span><span class="mini-label">Proveedores</span></div>
+        <div class="mini-stat"><span class="mini-num">{{ n_productos }}</span><span class="mini-label">Productos</span></div>
+        <div class="mini-stat"><span class="mini-num {% if stock_bajo %}text-danger{% endif %}">{{ stock_bajo }}</span><span class="mini-label">Stock bajo mínimo</span></div>
+    </div>
+</div>
+
+<div class="card">
+    <h3 class="card-title">Últimas ventas</h3>
+    {% if ultimas_ventas %}
+    <table class="table">
+        <thead><tr><th>Comprobante</th><th>Cliente</th><th>Fecha</th><th class="ta-r">Total</th><th>Estado</th></tr></thead>
+        <tbody>
+        {% for v in ultimas_ventas %}
+        <tr>
+            <td>{{ v.serie }}-{{ v.numero }}</td>
+            <td>{{ v.cliente.nombre }}</td>
+            <td>{{ v.fecha|date:"d/m/Y" }}</td>
+            <td class="ta-r">{{ v.total|soles }}</td>
+            <td><span class="badge badge-green">{{ v.get_estado_display }}</span></td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p class="empty">Aún no hay ventas registradas. Pronto podrás crearlas desde la sección <strong>Ventas</strong>.</p>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% load core_extras %}
+
+{% block title %}Clientes · FactuPerú{% endblock %}
+{% block page_title %}Clientes{% endblock %}
+
+{% block content %}
+<div class="card">
+  <div class="toolbar">
+    <form method="get" class="search">
+      <input type="text" name="q" value="{{ q }}" placeholder="Buscar por nombre o documento...">
+    </form>
+    <a href="{% url 'core:cliente_crear' %}" class="btn btn-primary">+ Nuevo cliente</a>
+  </div>
+  {% if clientes %}
+  <table class="table">
+    <thead><tr><th>Nombre</th><th>Documento</th><th>Teléfono</th><th>Email</th><th class="ta-r">Acciones</th></tr></thead>
+    <tbody>
+    {% for c in clientes %}
+    <tr>
+      <td>{{ c.nombre }}</td>
+      <td>{{ c.get_tipo_doc_display }}: {{ c.nro_doc }}</td>
+      <td>{{ c.telefono|default:"—" }}</td>
+      <td>{{ c.email|default:"—" }}</td>
+      <td class="ta-r table-actions">
+        <a href="{% url 'core:cliente_editar' c.pk %}" class="btn btn-light btn-sm">Editar</a>
+        <a href="{% url 'core:cliente_eliminar' c.pk %}" class="btn btn-danger btn-sm">Eliminar</a>
+      </td>
+    </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p class="empty">No hay clientes. Crea el primero con el botón <strong>+ Nuevo cliente</strong>.</p>
+  {% endif %}
+</div>
+{% endblock %}

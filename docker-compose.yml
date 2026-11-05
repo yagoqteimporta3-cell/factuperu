@@ -1,0 +1,27 @@
+services:
+  db:
+    image: postgres:16
+    restart: always
+    environment:
+      POSTGRES_DB: factuperu
+      POSTGRES_USER: factuperu
+      POSTGRES_PASSWORD: cambiar-esta-clave
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  web:
+    build: .
+    restart: always
+    depends_on:
+      - db
+    environment:
+      SECRET_KEY: cambiar-por-una-clave-larga-y-aleatoria
+      DEBUG: "False"
+      ALLOWED_HOSTS: tu-dominio.com
+      DATABASE_URL: postgres://factuperu:cambiar-esta-clave@db:5432/factuperu
+    ports:
+      - "8000:8000"
+    command: sh -c "python manage.py migrate --noinput && gunicorn config.wsgi:application --bind 0.0.0.0:8000 --workers 3"
+
+volumes:
+  pgdata:

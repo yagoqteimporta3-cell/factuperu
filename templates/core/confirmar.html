@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ titulo }} · FactuPerú{% endblock %}
+{% block page_title %}{{ titulo }}{% endblock %}
+
+{% block content %}
+<div class="card card-form">
+  <p class="confirm-text">¿Seguro que deseas eliminar <strong>{{ objeto }}</strong>? Esta acción no se puede deshacer.</p>
+  <form method="post">
+    {% csrf_token %}
+    <div class="form-actions">
+      <button type="submit" class="btn btn-danger">Sí, eliminar</button>
+      <a href="javascript:history.back()" class="btn btn-light">Cancelar</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

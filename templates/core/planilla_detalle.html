@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% load core_extras %}
+
+{% block title %}Planilla {{ planilla.mes }}/{{ planilla.anio }} · FactuPerú{% endblock %}
+{% block page_title %}Planilla {{ planilla.mes|stringformat:"02d" }}/{{ planilla.anio }}{% endblock %}
+
+{% block content %}
+<div class="card">
+  <div class="toolbar">
+    <span>{% if planilla.estado == 'cerrada' %}<span class="badge badge-green">Cerrada</span>{% else %}<span class="badge badge-amber">Borrador</span>{% endif %} · {{ planilla.detalles.count }} trabajador(es)</span>
+    <div>
+      <a href="{% url 'core:lista_planillas' %}" class="btn btn-light btn-sm">Volver</a>
+      <a href="{% url 'core:planilla_export_csv' planilla.pk %}" class="btn btn-primary btn-sm">⬇ Exportar CSV</a>
+      {% if planilla.estado != 'cerrada' %}
+      <a href="{% url 'core:planilla_cerrar' planilla.pk %}" class="btn btn-danger btn-sm">Cerrar planilla</a>
+      {% endif %}
+    </div>
+  </div>
+
+  {% if planilla.detalles.all %}
+  <table class="table">
+    <thead><tr>
+      <th>Trabajador</th><th>DNI</th><th class="ta-r">Sueldo</th><th class="ta-r">Asig. fam.</th>
+      <th class="ta-r">Total ingresos</th><th class="ta-r">Pensión</th><th class="ta-r">Renta 5ta</th>
+      <th class="ta-r">Neto a pagar</th><th class="ta-r">EsSalud</th>
+    </tr></thead>
+    <tbody>
+    {% for d in planilla.detalles.all %}
+    <tr>
+      <td>{{ d.trabajador.nombre_completo }}<br><span class="muted">{{ d.trabajador.cargo }}</span></td>
+      <td>{{ d.trabajador.dni }}</td>
+      <td class="ta-r">{{ d.sueldo|soles }}</td>
+      <td class="ta-r">{{ d.asignacion_familiar|soles }}</td>
+      <td class="ta-r">{{ d.total_ingresos|soles }}</td>
+      <td class="ta-r text-danger">{{ d.descuento_pension|soles }}</td>
+      <td class="ta-r text-danger">{{ d.renta_5ta|soles }}</td>
+      <td class="ta-r"><strong>{{ d.neto_pagar|soles }}</strong></td>
+      <td class="ta-r muted">{{ d.aporte_essalud|soles }}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+
+  <div class="totales">
+    <div class="line"><span>Total ingresos</span><span>{{ planilla.total_ingresos|soles }}</span></div>
+    <div class="line"><span>Total descuentos (pensión + renta 5ta)</span><span class="text-danger">{{ planilla.total_descuentos|soles }}</span></div>
+    <div class="line"><span>Total EsSalud (a cargo del empleador)</span><span>{{ planilla.total_essalud|soles }}</span></div>
+    <div class="line total"><span>Neto a pagar</span><span>{{ planilla.total_neto|soles }}</span></div>
+  </div>
+  {% else %}
+  <p class="empty">No hay trabajadores activos registrados para generar esta planilla.</p>
+  {% endif %}
+</div>
+{% endblock %}

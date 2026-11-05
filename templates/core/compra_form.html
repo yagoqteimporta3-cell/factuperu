@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+{% load core_extras %}
+
+{% block title %}Nueva compra · FactuPerú{% endblock %}
+{% block page_title %}Nueva compra{% endblock %}
+
+{% block content %}
+<form method="post" novalidate>
+  {% csrf_token %}
+  <div class="card">
+    <h3 class="card-title">Datos del comprobante</h3>
+    {% if form.non_field_errors %}<div class="alert alert-error">{{ form.non_field_errors|join:", " }}</div>{% endif %}
+    <div class="form-grid">
+      {% for field in form %}
+        <div class="field">
+          <span>{{ field.label }}</span>
+          {{ field }}
+          {% if field.errors %}<div class="error-text">{{ field.errors|join:", " }}</div>{% endif %}
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class="card">
+    <h3 class="card-title">Detalle (líneas)</h3>
+    {{ formset.management_form }}
+    <table class="table">
+      <thead><tr><th>Producto</th><th>Descripción</th><th style="width:100px">Cant.</th><th style="width:140px">P. unitario</th><th></th></tr></thead>
+      <tbody id="detalles-tbody">
+      {% for f in formset %}
+        <tr class="detalle-row">
+          <td>{{ f.id }}{{ f.DELETE }}{{ f.producto }}</td>
+          <td>{{ f.descripcion }}</td>
+          <td>{{ f.cantidad }}</td>
+          <td>{{ f.precio_unitario }}</td>
+          <td><button type="button" class="btn-remove-row" title="Quitar línea">×</button></td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+    <button type="button" class="btn btn-light btn-sm" id="btn-add-row">+ Agregar línea</button>
+    <p class="hint">El IGV (18%) y el total se calculan automáticamente. Ingresa los precios <strong>con IGV incluido</strong>.</p>
+  </div>
+
+  <div class="form-actions">
+    <button type="submit" class="btn btn-primary">Guardar compra</button>
+    <a href="{% url 'core:lista_compras' %}" class="btn btn-light">Cancelar</a>
+  </div>
+</form>
+
+<template id="empty-row">
+  <tr class="detalle-row">
+    <td>{{ formset.empty_form.id }}{{ formset.empty_form.DELETE }}{{ formset.empty_form.producto }}</td>
+    <td>{{ formset.empty_form.descripcion }}</td>
+    <td>{{ formset.empty_form.cantidad }}</td>
+    <td>{{ formset.empty_form.precio_unitario }}</td>
+    <td><button type="button" class="btn-remove-row" title="Quitar línea">×</button></td>
+  </tr>
+</template>
+
+<script>
+(function(){
+  var tbody = document.getElementById('detalles-tbody');
+  var template = document.getElementById('empty-row');
+  var totalForms = document.getElementById('id_detalles-TOTAL_FORMS');
+  document.getElementById('btn-add-row').addEventListener('click', function(){
+    var idx = parseInt(totalForms.value, 10);
+    var tr = document.createElement('tr');
+    tr.className = 'detalle-row';
+    tr.innerHTML = template.innerHTML.replace(/__prefix__/g, idx);
+    tbody.appendChild(tr);
+    totalForms.value = idx + 1;
+  });
+  tbody.addEventListener('click', function(e){
+    var btn = e.target.closest('.btn-remove-row');
+    if (!btn) return;
+    var tr = btn.closest('tr');
+    var del = tr.querySelector('input[id$="-DELETE"]');
+    if (del) { del.checked = true; tr.style.display = 'none'; }
+    else { tr.remove(); }
+  });
+})();
+</script>
+{% endblock %}

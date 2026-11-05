@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load core_extras %}
+
+{% block title %}Ventas · FactuPerú{% endblock %}
+{% block page_title %}Ventas{% endblock %}
+
+{% block content %}
+<div class="card">
+  <div class="toolbar">
+    <form method="get" class="search">
+      <input type="text" name="q" value="{{ q }}" placeholder="Buscar por número o cliente...">
+    </form>
+    <a href="{% url 'core:venta_crear' %}" class="btn btn-primary">+ Nueva venta</a>
+  </div>
+  {% if ventas %}
+  <table class="table">
+    <thead><tr><th>Comprobante</th><th>Cliente</th><th>Fecha</th><th class="ta-r">Total</th><th class="ta-r">Saldo</th><th>Estado</th></tr></thead>
+    <tbody>
+    {% for v in ventas %}
+    <tr>
+      <td><a href="{% url 'core:venta_detalle' v.pk %}" class="link">{{ v.serie }}-{{ v.numero }}</a><br><span class="muted">{{ v.get_tipo_display }}</span></td>
+      <td>{{ v.cliente.nombre }}</td>
+      <td>{{ v.fecha|date:"d/m/Y" }}</td>
+      <td class="ta-r">{{ v.total|soles }}</td>
+      <td class="ta-r">{% if v.saldo_pendiente > 0 %}<span class="text-danger">{{ v.saldo_pendiente|soles }}</span>{% else %}—{% endif %}</td>
+      <td>{% if v.estado == 'emitido' %}<span class="badge badge-green">Emitido</span>{% else %}<span class="badge badge-red">Anulado</span>{% endif %}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p class="empty">No hay ventas. Crea la primera con el botón <strong>+ Nueva venta</strong>.</p>
+  {% endif %}
+</div>
+{% endblock %}

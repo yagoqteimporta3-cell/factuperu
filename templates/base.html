@@ -1,0 +1,76 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}FactuPerú{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}?v=3">
+</head>
+<body>
+{% if user.is_authenticated %}
+<div class="layout">
+    <aside class="sidebar">
+        <div class="brand">
+            <span class="brand-mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="m9 15 2 2 4-4"/></svg></span>
+            <span class="brand-name">FactuPerú</span>
+        </div>
+        <nav class="nav">
+            <a href="{% url 'core:dashboard' %}" class="nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg><span>Dashboard</span></a>
+            <span class="nav-group">Operaciones</span>
+            <a href="{% url 'core:lista_ventas' %}" class="nav-link {% if request.resolver_match.url_name == 'lista_ventas' %}active{% endif %}"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M16 13H8"/><path d="M16 17H8"/><path d="M10 9H8"/></svg><span>Ventas</span></a>
+            <a href="{% url 'core:lista_compras' %}" class="nav-link {% if request.resolver_match.url_name == 'lista_compras' %}active{% endif %}"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg><span>Compras</span></a>
+            <a href="{% url 'core:lista_por_cobrar' %}" class="nav-link {% if request.resolver_match.url_name == 'lista_por_cobrar' %}active{% endif %}"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg><span>Por cobrar</span></a>
+            <a href="{% url 'core:lista_por_pagar' %}" class="nav-link {% if request.resolver_match.url_name == 'lista_por_pagar' %}active{% endif %}"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg><span>Por pagar</span></a>
+            <span class="nav-group">Planilla</span>
+            <a href="{% url 'core:lista_planillas' %}" class="nav-link {% if request.resolver_match.url_name == 'lista_planillas' %}active{% endif %}"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/></svg><span>Planilla</span></a>
+            <a href="{% url 'core:lista_trabajadores' %}" class="nav-link {% if request.resolver_match.url_name == 'lista_trabajadores' %}active{% endif %}"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span>Trabajadores</span></a>
+            <span class="nav-group">Maestros</span>
+            <a href="{% url 'core:lista_clientes' %}" class="nav-link {% if request.resolver_match.url_name == 'lista_clientes' %}active{% endif %}"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><span>Clientes</span></a>
+            <a href="{% url 'core:lista_proveedores' %}" class="nav-link {% if request.resolver_match.url_name == 'lista_proveedores' %}active{% endif %}"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8h4l3 3v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg><span>Proveedores</span></a>
+            <a href="{% url 'core:lista_productos' %}" class="nav-link {% if request.resolver_match.url_name == 'lista_productos' %}active{% endif %}"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><path d="M3.27 6.96 12 12.01l8.73-5.05"/><path d="M12 22.08V12"/></svg><span>Inventario</span></a>
+            <span class="nav-group">Análisis</span>
+            <a href="{% url 'core:reporte' %}" class="nav-link {% if request.resolver_match.url_name == 'reporte' %}active{% endif %}"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg><span>Reportes</span></a>
+        </nav>
+        <div class="sidebar-footer">
+            <div class="user-box">
+                <span class="user-avatar">{{ user.first_name|default:user.username|first|upper }}</span>
+                <div>
+                    <div class="user-name">{{ user.first_name|default:user.username }}</div>
+                    <div class="user-empresa">{{ empresa.razon_social|truncatechars:18 }}</div>
+                </div>
+            </div>
+            <form method="post" action="{% url 'core:logout' %}">
+                {% csrf_token %}
+                <button type="submit" class="btn-logout">Cerrar sesión</button>
+            </form>
+        </div>
+    </aside>
+    <main class="content">
+        <header class="topbar">
+            <div>
+                <div class="topbar-title">{% block page_title %}Dashboard{% endblock %}</div>
+                <div class="topbar-sub">{{ empresa.razon_social }} · RUC {{ empresa.ruc }}</div>
+            </div>
+            <div class="topbar-actions">
+                <span class="badge-empresa">{{ empresa.get_regimen_display }}</span>
+            </div>
+        </header>
+        {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% block content %}{% endblock %}
+    </main>
+</div>
+{% else %}
+    {% block auth %}{% endblock %}
+{% endif %}
+</body>
+</html>

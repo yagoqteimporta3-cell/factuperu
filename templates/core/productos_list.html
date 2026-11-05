@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% load core_extras %}
+
+{% block title %}Inventario · FactuPerú{% endblock %}
+{% block page_title %}Inventario / Productos{% endblock %}
+
+{% block content %}
+<div class="card">
+  <div class="toolbar">
+    <form method="get" class="search">
+      <input type="text" name="q" value="{{ q }}" placeholder="Buscar por código o descripción...">
+    </form>
+    <a href="{% url 'core:producto_crear' %}" class="btn btn-primary">+ Nuevo producto</a>
+  </div>
+  {% if productos %}
+  <table class="table">
+    <thead><tr><th>Código</th><th>Descripción</th><th>Unidad</th><th class="ta-r">P. compra</th><th class="ta-r">P. venta</th><th class="ta-r">Stock</th><th class="ta-r">Acciones</th></tr></thead>
+    <tbody>
+    {% for p in productos %}
+    <tr>
+      <td>{{ p.codigo|default:"—" }}</td>
+      <td>{{ p.descripcion }}</td>
+      <td>{{ p.get_unidad_display }}</td>
+      <td class="ta-r">{{ p.precio_compra|money }}</td>
+      <td class="ta-r">{{ p.precio_venta|money }}</td>
+      <td class="ta-r">
+        {% if p.stock_minimo and p.stock <= p.stock_minimo %}<span class="badge badge-red">{{ p.stock }}</span>{% else %}{{ p.stock }}{% endif %}
+      </td>
+      <td class="ta-r table-actions">
+        <a href="{% url 'core:producto_editar' p.pk %}" class="btn btn-light btn-sm">Editar</a>
+        <a href="{% url 'core:producto_eliminar' p.pk %}" class="btn btn-danger btn-sm">Eliminar</a>
+      </td>
+    </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p class="empty">No hay productos. Crea el primero con el botón <strong>+ Nuevo producto</strong>.</p>
+  {% endif %}
+</div>
+{% endblock %}

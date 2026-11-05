@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load core_extras %}
+
+{% block title %}Compras · FactuPerú{% endblock %}
+{% block page_title %}Compras{% endblock %}
+
+{% block content %}
+<div class="card">
+  <div class="toolbar">
+    <form method="get" class="search">
+      <input type="text" name="q" value="{{ q }}" placeholder="Buscar por número o proveedor...">
+    </form>
+    <a href="{% url 'core:compra_crear' %}" class="btn btn-primary">+ Nueva compra</a>
+  </div>
+  {% if compras %}
+  <table class="table">
+    <thead><tr><th>Comprobante</th><th>Proveedor</th><th>Fecha</th><th class="ta-r">Total</th><th class="ta-r">Saldo</th><th>Estado</th></tr></thead>
+    <tbody>
+    {% for c in compras %}
+    <tr>
+      <td><a href="{% url 'core:compra_detalle' c.pk %}" class="link">{{ c.serie }}-{{ c.numero }}</a><br><span class="muted">{{ c.get_tipo_display }}</span></td>
+      <td>{{ c.proveedor.nombre }}</td>
+      <td>{{ c.fecha|date:"d/m/Y" }}</td>
+      <td class="ta-r">{{ c.total|soles }}</td>
+      <td class="ta-r">{% if c.saldo_pendiente > 0 %}<span class="text-danger">{{ c.saldo_pendiente|soles }}</span>{% else %}—{% endif %}</td>
+      <td>{% if c.estado == 'registrado' %}<span class="badge badge-green">Registrado</span>{% else %}<span class="badge badge-red">Anulado</span>{% endif %}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p class="empty">No hay compras. Crea la primera con el botón <strong>+ Nueva compra</strong>.</p>
+  {% endif %}
+</div>
+{% endblock %}

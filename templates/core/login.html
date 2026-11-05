@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block title %}Iniciar sesión · FactuPerú{% endblock %}
+
+{% block auth %}
+<div class="auth-wrap">
+    <div class="auth-card">
+        <div class="brand auth-brand">
+            <span class="brand-mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="m9 15 2 2 4-4"/></svg></span>
+            <span class="brand-name">FactuPerú</span>
+        </div>
+        <p class="auth-sub">Gestión de ventas, compras e inventario para empresas peruanas.</p>
+        {% if form.errors %}
+        <div class="alert alert-error">Usuario o contraseña incorrectos.</div>
+        {% endif %}
+        <form method="post">
+            {% csrf_token %}
+            <label class="field">
+                <span>Usuario</span>
+                <input type="text" name="username" required autofocus>
+            </label>
+            <label class="field">
+                <span>Contraseña</span>
+                <input type="password" name="password" required>
+            </label>
+            <button type="submit" class="btn btn-primary btn-block">Entrar</button>
+        </form>
+        <p class="auth-alt">¿No tienes cuenta? <a href="{% url 'core:register' %}">Regístrate</a></p>
+    </div>
+</div>
+{% endblock %}

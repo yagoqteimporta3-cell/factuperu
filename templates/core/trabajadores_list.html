@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% load core_extras %}
+
+{% block title %}Trabajadores · FactuPerú{% endblock %}
+{% block page_title %}Trabajadores{% endblock %}
+
+{% block content %}
+<div class="card">
+  <div class="toolbar">
+    <form method="get" class="search">
+      <input type="text" name="q" value="{{ q }}" placeholder="Buscar por nombre o DNI...">
+    </form>
+    <a href="{% url 'core:trabajador_crear' %}" class="btn btn-primary">+ Nuevo trabajador</a>
+  </div>
+  {% if trabajadores %}
+  <table class="table">
+    <thead><tr><th>DNI</th><th>Nombres</th><th>Cargo</th><th class="ta-r">Sueldo</th><th>Pensión</th><th>Estado</th><th class="ta-r">Acciones</th></tr></thead>
+    <tbody>
+    {% for t in trabajadores %}
+    <tr>
+      <td>{{ t.dni }}</td>
+      <td>{{ t.nombre_completo }}</td>
+      <td>{{ t.cargo|default:"—" }}</td>
+      <td class="ta-r">{{ t.sueldo_base|soles }}</td>
+      <td>{{ t.get_regimen_pension_display }}</td>
+      <td>{% if t.activo %}<span class="badge badge-green">Activo</span>{% else %}<span class="badge badge-red">Inactivo</span>{% endif %}</td>
+      <td class="ta-r table-actions">
+        <a href="{% url 'core:trabajador_editar' t.pk %}" class="btn btn-light btn-sm">Editar</a>
+        <a href="{% url 'core:trabajador_eliminar' t.pk %}" class="btn btn-danger btn-sm">Eliminar</a>
+      </td>
+    </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p class="empty">No hay trabajadores. Registra el primero con el botón <strong>+ Nuevo trabajador</strong>.</p>
+  {% endif %}
+</div>
+{% endblock %}

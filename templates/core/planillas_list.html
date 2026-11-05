@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% load core_extras %}
+
+{% block title %}Planilla · FactuPerú{% endblock %}
+{% block page_title %}Planilla de trabajadores{% endblock %}
+
+{% block content %}
+<div class="card">
+  <div class="toolbar">
+    <span class="hint">Planillas mensuales generadas</span>
+    <a href="{% url 'core:planilla_crear' %}" class="btn btn-primary">+ Nueva planilla</a>
+  </div>
+  {% if planillas %}
+  <table class="table">
+    <thead><tr><th>Periodo</th><th>Estado</th><th class="ta-r">Total ingresos</th><th class="ta-r">Total descuentos</th><th class="ta-r">Neto a pagar</th><th class="ta-r">EsSalud</th><th class="ta-r">Acción</th></tr></thead>
+    <tbody>
+    {% for p in planillas %}
+    <tr>
+      <td><a href="{% url 'core:planilla_detalle' p.pk %}" class="link">{{ p.mes|stringformat:"02d" }}/{{ p.anio }}</a></td>
+      <td>{% if p.estado == 'cerrada' %}<span class="badge badge-green">Cerrada</span>{% else %}<span class="badge badge-amber">Borrador</span>{% endif %}</td>
+      <td class="ta-r">{{ p.total_ingresos|soles }}</td>
+      <td class="ta-r">{{ p.total_descuentos|soles }}</td>
+      <td class="ta-r">{{ p.total_neto|soles }}</td>
+      <td class="ta-r">{{ p.total_essalud|soles }}</td>
+      <td class="ta-r"><a href="{% url 'core:planilla_detalle' p.pk %}" class="btn btn-light btn-sm">Ver</a></td>
+    </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p class="empty">Aún no hay planillas. Genera la primera con <strong>+ Nueva planilla</strong>.</p>
+  {% endif %}
+</div>
+{% endblock %}

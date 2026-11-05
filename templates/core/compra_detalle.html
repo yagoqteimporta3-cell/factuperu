@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% load core_extras %}
+
+{% block title %}Compra {{ comp.serie }}-{{ comp.numero }} · FactuPerú{% endblock %}
+{% block page_title %}Compra {{ comp.serie }}-{{ comp.numero }}{% endblock %}
+
+{% block content %}
+<div class="card">
+  <div class="toolbar">
+    <span>{% if comp.estado == 'registrado' %}<span class="badge badge-green">Registrado</span>{% else %}<span class="badge badge-red">Anulado</span>{% endif %} · {{ comp.get_tipo_display }}</span>
+    <div>
+      <a href="{% url 'core:lista_compras' %}" class="btn btn-light btn-sm">Volver</a>
+      {% if comp.estado == 'registrado' %}
+      <a href="{% url 'core:compra_anular' comp.pk %}" class="btn btn-danger btn-sm">Anular</a>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="detail-grid">
+    <div class="detail-item"><div class="lbl">Proveedor</div><div class="val">{{ comp.proveedor.nombre }}</div></div>
+    <div class="detail-item"><div class="lbl">Documento</div><div class="val">{{ comp.proveedor.get_tipo_doc_display }}: {{ comp.proveedor.nro_doc }}</div></div>
+    <div class="detail-item"><div class="lbl">Fecha</div><div class="val">{{ comp.fecha|date:"d/m/Y" }}</div></div>
+    <div class="detail-item"><div class="lbl">Vencimiento</div><div class="val">{{ comp.fecha_vencimiento|date:"d/m/Y"|default:"—" }}</div></div>
+    <div class="detail-item"><div class="lbl">Moneda</div><div class="val">{{ comp.moneda }}</div></div>
+  </div>
+
+  <table class="table">
+    <thead><tr><th>Descripción</th><th class="ta-r">Cant.</th><th class="ta-r">P. unitario</th><th class="ta-r">Importe</th></tr></thead>
+    <tbody>
+    {% for d in comp.detalles.all %}
+    <tr>
+      <td>{{ d.descripcion }}</td>
+      <td class="ta-r">{{ d.cantidad }}</td>
+      <td class="ta-r">{{ d.precio_unitario|money }}</td>
+      <td class="ta-r">{{ d.importe|money }}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+
+  <div class="totales">
+    <div class="line"><span>Subtotal (base)</span><span>{{ comp.subtotal|soles }}</span></div>
+    <div class="line"><span>IGV (18%)</span><span>{{ comp.igv|soles }}</span></div>
+    <div class="line total"><span>Total</span><span>{{ comp.total|soles }}</span></div>
+  </div>
+
+  {% if comp.saldo_pendiente > 0 %}
+  <div class="detail-item" style="margin-top:16px">
+    <div class="lbl">Saldo pendiente</div>
+    <div class="val text-danger">{{ comp.saldo_pendiente|soles }}</div>
+  </div>
+  {% endif %}
+
+  {% if comp.pagos.all %}
+  <h3 class="card-title" style="margin-top:18px">Pagos</h3>
+  <table class="table">
+    <thead><tr><th>Fecha</th><th>Método</th><th class="ta-r">Monto</th></tr></thead>
+    <tbody>
+    {% for p in comp.pagos.all %}
+    <tr><td>{{ p.fecha|date:"d/m/Y" }}</td><td>{{ p.get_metodo_display }}</td><td class="ta-r">{{ p.monto|soles }}</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  {% endif %}
+</div>
+{% endblock %}

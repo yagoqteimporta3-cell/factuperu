@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% load core_extras %}
+
+{% block title %}Cuentas por pagar · FactuPerú{% endblock %}
+{% block page_title %}Cuentas por pagar{% endblock %}
+
+{% block content %}
+<div class="card">
+  <div class="toolbar">
+    <span class="hint">Total pendiente: <strong class="text-danger">{{ total|soles }}</strong></span>
+  </div>
+  {% if items %}
+  <table class="table">
+    <thead><tr><th>Comprobante</th><th>Proveedor</th><th>Emisión</th><th>Vencimiento</th><th class="ta-r">Total</th><th class="ta-r">Saldo</th><th class="ta-r">Acción</th></tr></thead>
+    <tbody>
+    {% for c in items %}
+    <tr>
+      <td><a href="{% url 'core:compra_detalle' c.pk %}" class="link">{{ c.serie }}-{{ c.numero }}</a></td>
+      <td>{{ c.proveedor.nombre }}</td>
+      <td>{{ c.fecha|date:"d/m/Y" }}</td>
+      <td>{{ c.fecha_vencimiento|date:"d/m/Y"|default:"—" }}</td>
+      <td class="ta-r">{{ c.total|soles }}</td>
+      <td class="ta-r text-danger">{{ c.saldo_pendiente|soles }}</td>
+      <td class="ta-r"><a href="{% url 'core:registrar_pago' 'pago' c.pk %}" class="btn btn-primary btn-sm">Registrar pago</a></td>
+    </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p class="empty">No hay cuentas por pagar. Todo está al día. 🎉</p>
+  {% endif %}
+</div>
+{% endblock %}

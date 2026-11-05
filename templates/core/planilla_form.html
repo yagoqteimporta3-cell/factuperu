@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% load core_extras %}
+
+{% block title %}Nueva planilla · FactuPerú{% endblock %}
+{% block page_title %}Nueva planilla{% endblock %}
+
+{% block content %}
+<div class="card card-form">
+  <form method="post">
+    {% csrf_token %}
+    <div class="form-grid">
+      <div class="field">
+        <span>Mes (1–12)</span>
+        <input type="number" name="mes" min="1" max="12" value="{{ hoy.month }}" required>
+      </div>
+      <div class="field">
+        <span>Año</span>
+        <input type="number" name="anio" value="{{ hoy.year }}" required>
+      </div>
+    </div>
+    <p class="hint">Se generará la planilla con todos los trabajadores activos, considerando un mes completo (30 días). El sueldo se prorratea si editas los días en el detalle.</p>
+    <div class="form-actions">
+      <button type="submit" class="btn btn-primary">Generar planilla</button>
+      <a href="{% url 'core:lista_planillas' %}" class="btn btn-light">Cancelar</a>
+    </div>
+  </form>
+</div>
+{% endblock %}
