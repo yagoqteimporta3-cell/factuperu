@@ -1,4 +1,4 @@
-# Guía para subir FactuPerú a un servidor (producción)
+# Guía para subir Sefactel a un servidor (producción)
 
 Esta guía explica cómo dejar la app corriendo en un servidor real (Linux) para que
 tus clientes la usen por internet.

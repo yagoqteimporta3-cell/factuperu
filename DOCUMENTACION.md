@@ -1,4 +1,4 @@
-# FactuPerú — Estado del Proyecto
+# Sefactel — Estado del Proyecto
 
 **Software de gestión contable para empresas peruanas** (facturación, inventario, cobros/pagos y planilla), pensado para venderlo como servicio, similar a Siigo Nube o NubeCont.
 

@@ -1,4 +1,4 @@
-# FactuPerú
+# Sefactel
 
 Sistema web (SaaS) de gestión contable para empresas peruanas: ventas, compras,
 inventario, cuentas por cobrar/pagar y reportes. Multiempresa, con IGV 18% automático.
